@@ -1,0 +1,43 @@
+version: "3.7"
+services:
+        app_omnistock:
+                build:
+                        context: .
+                        dockerfile: Dockerfile-xdebug
+                container_name: omnitest_app
+                volumes:
+                        - ".:/app"
+                        - "~/,composer:/home/omni/.composer"
+                command: "/usr/sbin/php-fpm8.1 -R"
+                environment:
+                        DOCKER: 1
+                        PGHOST: psql
+                        PGUSER: omn:wqitest
+                networks: [default]
+        postgres:
+                image: postgres
+                container_name: omnistock_postgres
+                volumes:
+                        - omnitest_db_data:/var/lib/postgresql/data
+                ports:
+                        - "5432:5432"
+                environment:
+                        POSTGRES_USER: omnitest
+                        POSTGRES_DB: omnitest
+                        POSTGRES_PASSWORD: postgresql
+                networks: [default]
+
+        nginx:
+                image: nginx
+                container_name: omnistocktest_nginx
+                volumes:
+                        - ".:/app"
+                        - "./tasks/docker/nginx/conf.d/:/etc/nginx/conf.d/"
+                ports:
+                        - "80:80"
+                networks: [default]
+volumes:
+        omnitest_db_data:
+                driver: local
+networks:
+        default: ~
