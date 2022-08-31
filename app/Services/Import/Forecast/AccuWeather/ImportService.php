@@ -22,10 +22,16 @@ class ImportService extends AbstractImport {
     
 
     protected function checkEnv() {
-        $apikey = config::get('OPENWEATHERMAP_APIKEY');
+        $this->apikey = config::get('OPENWEATHERMAP_APIKEY');
         // check weather the api key is filled
-        if(!$apikey) {
+        if(!$this->apikey) {
             throw new Excepetion('Openweathermap api key not set');
+        }
+
+        $this->url = config::get('OPENWEATHERMAP_URL');
+        // check weather the api key is filled
+        if(!$this->url) {
+            throw new Excepetion('Openweathermap url not set');
         }
     }
 
@@ -35,15 +41,15 @@ class ImportService extends AbstractImport {
     public function import() {
         $this->checkEnv();
 
-        // detect filenmae
+        
 
         
  
         try {
-            $response = Http::get('https://bulk.openweathermap.org/snapshot/weather_16.json.gz?appid=' . $this->apiKey);
+            $response = Http::get($this->url . $this->apiKey);
         } catch ( clientExcpetion $e) {
             throw new DatasourceException($e->getMessage());
-        )
+        }
 
         $data = $response->body();
         foreach($data as $json) {

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('weather_types', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->index(['rating_id', 'created_at']);
         });
     }
 

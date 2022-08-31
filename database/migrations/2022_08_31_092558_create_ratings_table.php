@@ -16,6 +16,11 @@ return new class extends Migration
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('rating');
+            $table->decimal('min_temp', $precision = 5, $scale = 2);
+            $table->decimal('max_temp', $precision = 5, $scale = 2);
+            $table->string('type');
+            $table->index(['datasource_id']);
         });
     }
 
