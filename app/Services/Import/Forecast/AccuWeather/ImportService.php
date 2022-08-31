@@ -13,6 +13,9 @@ class ImportService extends AbstractImport {
 
     protected $apiKey;
 
+    /**
+     * @inheritdoc
+     */
     public function __construct(string $id) {
         parent::__construct($id);
     }
@@ -42,13 +45,22 @@ class ImportService extends AbstractImport {
             throw new DatasourceException($e->getMessage());
         )
 
-        
+        $data = $response->body();
+        foreach($data as $json) {
+            // if one of the sections fail, throw an exception
+            // fetch city data, query database or insert
+            // fetch weather data
+            $rating = $this->predictRating($json['main'], $json['wind']]);
+            // fetch the rating based on weather id and temperature and wind
+            // push all the data in the rating database and proceed to the next line
+            
+        }
+    }
 
-       // loop through the json data
+    // calculate the rating based on the temperature, wind etc
+    protected function predictRating($temperature, $wind) {
 
-
-       // fetch the city id from the database
-
-       //fetch the 
+        $rating = Rating::findRating($temperature, $wind);
+        return $rating->rating;
     }
 }
